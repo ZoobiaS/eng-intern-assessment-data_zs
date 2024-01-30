@@ -64,3 +64,11 @@ with temp as (
     from Orders o
     inner join Users c on c.user_id = o.user_id
 ) 
+
+select user_id, username
+, min(order_date) as start, max(order_date) as end, count(*) as cnt, 
+  datediff(day, max(order_date), min(order_date) as daysapart
+from temp
+group by user_id, DATE(order_date, -rn)
+having count(*) >= 3 and daysapart between (2,3) 
+--the having clause is to ensure that at least 3 orders were made, and that those three orders were between 48 to 72 hours apart (ie, on three consecutive days)
